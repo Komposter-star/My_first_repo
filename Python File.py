@@ -21,28 +21,27 @@ class Ball():
     def move(self):
         self.x += 1
         self.draw()
-    def move_to(self, x, y):
-        self.x = x
-        self.y = y
-    def set_to_animate(self, x, y, steps):
-        dX = (x - self.x)//steps
-        dY = (y - self.y)//steps
-        for i in range(1, steps):
-            self.route.append((self.x + i * dX, self.y + i * dY))
 
-        
+    def set_to_animate(self, x, y, time, FPS):
+        steps = int(time*FPS)
+        if self.route:
+            X, Y = self.route[-1]
+        else:
+            X, Y = self.x, self.y
+        dX = (x - X)//steps
+        dY = (y - Y)//steps
+        for i in range(1, steps):
+            self.route.append((X + i * dX, Y + i * dY))
+  
     def animate(self):
         if self.route:
             self.x, self.y = self.route.pop(0)
         self.draw()
         
-
 ball = Ball(500, 400, 50)
-
-        
-
+FPS = 20
 while not done:
-    clock.tick(20)
+    clock.tick(FPS)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -50,7 +49,7 @@ while not done:
             exit()
             
         if event.type == pygame.MOUSEBUTTONDOWN:
-            ball.set_to_animate(*event.pos, 20)
+            ball.set_to_animate(*event.pos, 0.2, 20)
             
         
     screen.fill(BLACK)
